@@ -3,10 +3,12 @@ import { push, set } from "firebase/database";
 import { messagesRef } from "src/firebase/config";
 import { RootState } from "src/redux/app/store";
 
-type Message = {
+export type Message = {
   key: string;
   content: string;
   username: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type MessageState = {
@@ -19,11 +21,14 @@ const initialState: MessageState = {
 
 export const createAsyncMessage = createAsyncThunk(
   "message/create",
-  async ({ content, username }: Omit<Message, "key">) => {
+  async ({ content, username }: Pick<Message, "content" | "username">) => {
     const newMessageRef = push(messagesRef);
+    const dateString = new Date().toISOString();
     set(newMessageRef, {
       content,
       username,
+      createdAt: dateString,
+      updatedAt: dateString,
     });
   }
 );
