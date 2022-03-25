@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { push, set } from "firebase/database";
+import { messagesRef } from "src/firebase/config";
 import { RootState } from "src/redux/app/store";
 
 type Message = {
@@ -15,6 +17,17 @@ const initialState: MessageState = {
   messages: [],
 };
 
+export const createAsyncMessage = createAsyncThunk(
+  "message/create",
+  async ({ content, username }: Omit<Message, "key">) => {
+    const newMessageRef = push(messagesRef);
+    set(newMessageRef, {
+      content,
+      username,
+    });
+  }
+);
+
 export const messageSlice = createSlice({
   name: "message",
   initialState,
@@ -22,6 +35,14 @@ export const messageSlice = createSlice({
     setMessages: (state, action: PayloadAction<Message[]>) => {
       state.messages = [...action.payload];
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(createAsyncMessage.fulfilled, () => {
+      console.log("createAsyncMessage.fulfilled");
+    });
+    builder.addCase(createAsyncMessage.rejected, () => {
+      console.error("createAsyncMessage.rejected");
+    });
   },
 });
 
