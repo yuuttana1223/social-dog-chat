@@ -29,6 +29,12 @@ export const useMessages = () => {
 
         // 配列に変換
         // [{key: "MyzOgQW", content: "Hello", username: "taro"}, {key: "MygQW", content: "he"...}]
+
+        // テーブル作成前はnullが返ってくる
+        if (messages === null) {
+          dispatch(setIsLoading(false));
+          return;
+        }
         const entries = Object.entries(messages);
         const newMessages = entries.map(([key, message]) => ({
           key,
