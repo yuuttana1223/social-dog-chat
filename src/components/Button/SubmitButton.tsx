@@ -5,9 +5,11 @@ import styled from "styled-components";
 const _Button = styled.button`
   box-sizing: border-box;
   display: block;
+  height: 100%;
   padding: 8px 12px;
   border-radius: 24px;
   font-weight: bold;
+  font-size: medium;
   background-color: ${({ disabled }) =>
     disabled ? "rgb(96 165 250)" : "rgb(59 130 246)"};
   color: white;
